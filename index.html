@@ -129,7 +129,7 @@ select.sort-sel{border:1px solid var(--border);border-radius:var(--radius-sm);pa
   border:1px solid var(--border);
   border-radius:var(--radius-sm);
   display:grid;
-  grid-template-columns:170px 140px 1fr 155px 160px;
+  grid-template-columns:165px 125px 185px 148px 200px;
   align-items:stretch;
   cursor:pointer;
   transition:border-color .12s, box-shadow .12s;
@@ -139,7 +139,7 @@ select.sort-sel{border:1px solid var(--border);border-radius:var(--radius-sm);pa
 .case-card:hover{border-color:#90caf9;box-shadow:0 1px 6px rgba(21,101,192,.1);}
 .case-card.expanded{border-color:var(--blue-mid);border-bottom-left-radius:0;border-bottom-right-radius:0;}
 @media(max-width:960px){
-  .case-card{grid-template-columns:150px 120px 1fr 130px 140px;}
+  .case-card{grid-template-columns:150px 115px 165px 130px 185px;}
 }
 @media(max-width:720px){
   .case-card{grid-template-columns:1fr 1fr;}
@@ -172,8 +172,8 @@ select.sort-sel{border:1px solid var(--border);border-radius:var(--radius-sm);pa
 .cc-station{font-size:9.5px;font-weight:700;background:var(--blue-bg);color:var(--blue-mid);padding:2px 6px;border-radius:3px;}
 
 /* Col 3 */
-.cc-driver{font-size:12.5px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
-.cc-driver-id{font-size:10px;color:var(--text3);}
+.cc-driver{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.cc-driver-id{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
 
 /* Col 4 */
 .cc-pkg-label{font-size:9.5px;color:var(--text3);letter-spacing:.2px;}
@@ -181,14 +181,28 @@ select.sort-sel{border:1px solid var(--border);border-radius:var(--radius-sm);pa
 .cc-pkg-val{font-size:14px;font-weight:700;color:var(--text);margin-top:1px;}
 
 /* Col 5 */
-.cc-status-wrap{display:flex;flex-direction:column;align-items:flex-start;gap:3px;}
-.status-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:5px;font-size:11px;font-weight:600;white-space:nowrap;}
-.sb-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
-.sb-aguardando{background:var(--amber-bg);color:var(--amber-mid);}
-.sb-comprovante{background:var(--blue-bg);color:var(--blue);}
-.sb-penalidade{background:var(--red-bg);color:var(--red);}
+.cc-status-wrap{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0;}
+.status-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:5px;font-size:11px;font-weight:600;white-space:nowrap;letter-spacing:.1px;}
+.sb-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
 .sb-anulado{background:var(--gray-bg);color:var(--gray-mid);}
-.sb-faturamento{background:var(--green-bg);color:var(--green-mid);}
+/* ── STATUS COM ALERTA PISCANTE ── */
+@keyframes dot-pulse{
+  0%,100%{transform:scale(1);opacity:1;}
+  45%{transform:scale(2);opacity:.3;}
+}
+@keyframes badge-glow{
+  0%,100%{opacity:1;}
+  45%{opacity:.65;}
+}
+.sb-aguardando{background:var(--amber-bg);color:var(--amber-mid);animation:badge-glow 1.6s ease-in-out infinite;}
+.sb-aguardando .sb-dot{animation:dot-pulse 1.6s ease-in-out infinite;}
+.sb-comprovante{background:var(--blue-bg);color:var(--blue);animation:badge-glow 1.8s ease-in-out infinite;}
+.sb-comprovante .sb-dot{animation:dot-pulse 1.8s ease-in-out infinite;}
+.sb-penalidade{background:var(--red-bg);color:var(--red);animation:badge-glow 1.2s ease-in-out infinite;}
+.sb-penalidade .sb-dot{animation:dot-pulse 1.2s ease-in-out infinite;}
+.sb-faturamento{background:var(--green-bg);color:var(--green-mid);animation:badge-glow 2s ease-in-out infinite;}
+.sb-faturamento .sb-dot{animation:dot-pulse 2s ease-in-out infinite;}
+/* ── FIM ALERTAS ── */
 .sub-badge{font-size:9.5px;padding:2px 6px;border-radius:3px;border:1px solid var(--border);background:var(--surface2);color:var(--text3);}
 .sub-revisado{border-color:#a5d6a7;background:#e8f5e9;color:#2e7d32;}
 .sub-sem-revisao{border-color:#ffcc80;background:#fff3e0;color:#e65100;}

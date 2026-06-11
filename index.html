@@ -343,7 +343,20 @@ const SM = {
 /* ── INIT ── */
 function init() {
   const saved = localStorage.getItem('pnr_cases_v2');
-  if (saved) { try { ST.cases = JSON.parse(saved); } catch(e){} }
+  if (saved) {
+    try {
+      ST.cases = JSON.parse(saved);
+      // Migração: preenche nomes de motoristas ausentes usando o dicionário
+      let enriched = false;
+      ST.cases.forEach(c => {
+        if (!c.driverName && c.idMotorista) {
+          const nome = driverName(c.idMotorista);
+          if (nome) { c.driverName = nome; enriched = true; }
+        }
+      });
+      if (enriched) saveState();
+    } catch(e) {}
+  }
   const theme = localStorage.getItem('pnr_theme') || 'light';
   document.documentElement.setAttribute('data-theme', theme);
   render();

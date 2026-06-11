@@ -351,6 +351,48 @@ function init() {
 
 function saveState() { localStorage.setItem('pnr_cases_v2', JSON.stringify(ST.cases)); }
 
+/* ── DRIVER DICTIONARY ── */
+const DRIVERS = {
+  4302910: 'Adriano Silva Della Riva',
+  2087229: 'Aline Fernanda Nogueira',
+  2570567: 'Aline Ingriti Rodrigues dos Santos',
+  3136657: 'Benedito Alberto Zanzim Filho',
+  3926563: 'Eliton Ferreira da Conceicao',
+  3674354: 'Erica Balero Martine Peres',
+  4209278: 'Fabricio Oliveira Bernardes',
+  3153983: 'Florisvaldo Amorim dos Santos',
+  2233812: 'Franco Hugo Rodrigues Modolo',
+  3162733: 'Genesis Ataide Campagnoli',
+  3422259: 'Gislaine Alencar da Silva',
+  3451462: 'Glacielson Ferreira de Amorim',
+  2228257: 'Hudson Aparecido Barbosa dos Reis',
+  3138967: 'Joao Gabriel Soares Franzim',
+  2994157: 'Joice Aparecida da Silva',
+  2238025: 'Jonas De Jesus Jorge',
+  2820630: 'Jose Matheus de Araujo Ferreira',
+  2881122: 'Jose Roberto da Silva',
+  1978400: 'Jurandir Madaleno Do Nascimento',
+  4207643: 'Katalyn Belanga',
+  2801206: 'Kleverson Soler Ribeiro',
+  4520922: 'Leidison Aparecido Rodrigues dos Santos',
+  1898063: 'Lucca Cuenca de Oliveira Gagliardo',
+  1987484: 'Luis Augusto Sabatin',
+  2783667: 'Luis Gustavo Moretti Siqueira',
+  3380704: 'Luiz Carlos Teles Almeida',
+  3351255: 'Luiz Henrique Dos Santos',
+  3998181: 'Mateus Batista Dos Santos',
+  2072843: 'Michel Catonio Dos Santos',
+  2852269: 'Natalia Silva Belanga',
+  1857248: 'Paulo Sergio Dos Santos',
+  2802430: 'Sebastiao da Silva Bueno Neto',
+  2934208: 'Tiago Pereira',
+  4401556: 'Vitor Hugo Montanari',
+  3015409: 'Weslley Gomes da Rocha',
+};
+function driverName(id) {
+  return DRIVERS[parseInt(id)] || DRIVERS[id] || '';
+}
+
 /* ── CLIPBOARD PARSER ── */
 function parseClipboard(raw) {
   const lines = raw.split('\n').map(l => l.trim());
@@ -426,7 +468,7 @@ function parseCSV(raw) {
       routeId:     (c[18]||'').trim(),
       idMotorista: (c[19]||'').trim(),
       dataEntrega: (c[20]||'').trim(),
-      routeCode:'', driverName:'',
+      routeCode:'', driverName: driverName((c[19]||'').trim()),
       source:'csv', importedAt: new Date().toISOString()
     });
   }

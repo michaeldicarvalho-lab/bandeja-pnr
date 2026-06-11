@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bandeja PNR · SSP36</title>
+<style>
+:root{
+  --bg:#f0f2f5;--surface:#fff;--surface2:#f5f6f8;--border:#e0e3e9;
+  --text:#1a1d23;--text2:#5a6072;--text3:#9aa0b0;
+  --blue:#0d47a1;--blue-mid:#1565c0;--blue-bg:#e3f2fd;
+  --green:#1b5e20;--green-mid:#2e7d32;--green-bg:#e8f5e9;
+  --amber:#bf360c;--amber-mid:#e65100;--amber-bg:#fff3e0;
+  --red:#b71c1c;--red-mid:#c62828;--red-bg:#ffebee;
+  --gray:#37474f;--gray-mid:#546e7a;--gray-bg:#eceff1;
+  --purple:#4a148c;--purple-mid:#7b1fa2;--purple-bg:#f3e5f5;
+  --radius:10px;--radius-sm:6px;
+}
+[data-theme="dark"]{
+  --bg:#0f1419;--surface:#1a1f29;--surface2:#222837;--border:#2c3344;
+  --text:#e6e8eb;--text2:#9aa4b2;--text3:#6b7585;
+  --blue:#82b1ff;--blue-mid:#42a5f5;--blue-bg:rgba(66,165,245,.18);
+  --green:#69f0ae;--green-mid:#4caf50;--green-bg:rgba(76,175,80,.18);
+  --amber:#ffb74d;--amber-mid:#ff9800;--amber-bg:rgba(255,152,0,.18);
+  --red:#ff6e6e;--red-mid:#ef5350;--red-bg:rgba(239,83,80,.18);
+  --gray:#b0bec5;--gray-mid:#90a4ae;--gray-bg:rgba(84,110,122,.18);
+  --purple:#ce93d8;--purple-mid:#ab47bc;--purple-bg:rgba(206,147,216,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:'Segoe UI',system-ui,sans-serif;color:var(--text);font-size:14px;}
+
+/* ── HEADER ── */
+.header{background:linear-gradient(135deg,#1a237e 0%,#283593 55%,#1565c0 100%);color:#fff;padding:0 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;min-height:62px;}
+.header-left{display:flex;align-items:center;gap:14px;}
+.logo-box{display:flex;align-items:center;gap:10px;}
+.logo-icon{font-size:24px;line-height:1;}
+.logo-title{font-size:16px;font-weight:700;letter-spacing:.2px;}
+.logo-sub{font-size:11px;opacity:.75;margin-top:1px;}
+.divider-v{width:1px;height:32px;background:rgba(255,255,255,.25);}
+.tab-area{display:flex;gap:4px;}
+.tab{padding:5px 13px;border-radius:99px;font-size:12px;font-weight:500;opacity:.6;cursor:pointer;}
+.tab.active{background:rgba(255,255,255,.2);opacity:1;font-weight:700;}
+.header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.btn-icon{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);border-radius:8px;padding:6px 12px;font-size:12px;color:#fff;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.btn-icon:hover{background:rgba(255,255,255,.28);}
+.period-chip{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);border-radius:99px;padding:3px 12px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap;}
+.theme-toggle{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:99px;padding:4px 10px;font-size:13px;color:#fff;cursor:pointer;}
+.theme-toggle:hover{background:rgba(255,255,255,.28);}
+
+/* ── MAIN ── */
+.main{max-width:1700px;margin:0 auto;padding:14px 16px;}
+
+/* ── IMPORT PANEL ── */
+.import-panel{background:var(--surface);border-radius:var(--radius);border:2px dashed #90a4ae;margin-bottom:14px;overflow:hidden;}
+.import-panel.collapsed .import-body{display:none;}
+.import-head{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;cursor:pointer;gap:10px;user-select:none;}
+.import-head-left{display:flex;align-items:center;gap:10px;}
+.import-icon{font-size:20px;}
+.import-head h2{font-size:13px;font-weight:700;color:var(--blue-mid);}
+.import-head p{font-size:11px;color:var(--text2);margin-top:1px;}
+.import-toggle{font-size:16px;color:var(--text3);transition:transform .2s;flex-shrink:0;}
+.import-panel.collapsed .import-toggle{transform:rotate(-90deg);}
+.import-body{padding:0 16px 14px;}
+.import-row{display:flex;gap:10px;align-items:flex-start;}
+textarea#pasteArea{flex:1;height:88px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px;font-size:11px;color:var(--text);background:var(--surface2);resize:vertical;font-family:monospace;line-height:1.5;min-width:0;}
+textarea#pasteArea:focus{outline:2px solid var(--blue-mid);border-color:transparent;}
+textarea#pasteArea::placeholder{color:var(--text3);}
+.import-btns{display:flex;flex-direction:column;gap:6px;flex-shrink:0;width:148px;}
+.btn-import{background:var(--blue-mid);color:#fff;border:none;border-radius:var(--radius-sm);padding:9px 12px;font-size:12px;font-weight:700;cursor:pointer;text-align:center;}
+.btn-import:hover{opacity:.88;}
+.btn-csv{background:var(--green-mid);color:#fff;border:none;border-radius:var(--radius-sm);padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;text-align:center;}
+.btn-csv:hover{opacity:.88;}
+.btn-clear{background:var(--surface);color:var(--red-mid);border:1px solid var(--red-mid);border-radius:var(--radius-sm);padding:7px 12px;font-size:11px;font-weight:600;cursor:pointer;}
+.btn-clear:hover{background:var(--red-bg);}
+input#csvInput{display:none;}
+.import-msg{margin-top:8px;padding:7px 11px;border-radius:var(--radius-sm);font-size:12px;display:none;}
+.import-msg.ok{background:var(--green-bg);color:var(--green);display:block;}
+.import-msg.err{background:var(--red-bg);color:var(--red);display:block;}
+.import-msg.info{background:var(--blue-bg);color:var(--blue);display:block;}
+
+/* ── STATS ROW ── */
+.stats-row{display:grid;grid-template-columns:90px 1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
+@media(max-width:900px){.stats-row{grid-template-columns:90px 1fr 1fr;}}
+@media(max-width:600px){.stats-row{grid-template-columns:1fr 1fr;}}
+.stat-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:12px 14px;}
+.stat-total{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px 8px;}
+.stat-total .stlabel{font-size:11px;color:var(--text2);font-weight:500;margin-bottom:4px;}
+.stat-total .stnum{font-size:38px;font-weight:800;line-height:1;color:var(--text);}
+.stat-card h3{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px;}
+.srow{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid transparent;}
+.srow:hover{background:var(--surface2);}
+.slbl{font-size:12px;color:var(--text2);}
+.srow.hi .slbl{font-weight:600;color:var(--text);}
+.svals{display:flex;align-items:center;gap:6px;}
+.snum{font-size:13px;font-weight:700;}
+.spct{font-size:10px;color:var(--text3);}
+.srow.hi .snum{color:var(--blue-mid);}
+
+/* ── FILTER BAR ── */
+.filter-bar{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:9px 12px;margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.filter-chips{display:flex;gap:5px;flex-wrap:wrap;flex:1;min-width:0;}
+.chip{padding:4px 12px;border-radius:99px;border:1px solid var(--border);font-size:11px;font-weight:500;cursor:pointer;background:var(--surface2);color:var(--text2);white-space:nowrap;transition:all .12s;}
+.chip:hover{border-color:var(--blue-mid);color:var(--blue-mid);}
+.chip.active{background:var(--blue-mid);color:#fff;border-color:var(--blue-mid);}
+.chip.c-aguardando.active{background:var(--amber-mid);border-color:var(--amber-mid);}
+.chip.c-penalidade.active{background:var(--red-mid);border-color:var(--red-mid);}
+.chip.c-anulado.active{background:var(--gray-mid);border-color:var(--gray-mid);}
+.chip.c-faturamento.active{background:var(--green-mid);border-color:var(--green-mid);}
+.chip.c-comprovante.active{background:var(--blue-mid);border-color:var(--blue-mid);}
+.filter-right{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.search-wrap{position:relative;}
+.search-wrap input{border:1px solid var(--border);border-radius:99px;padding:5px 12px 5px 28px;font-size:12px;background:var(--surface2);color:var(--text);width:175px;outline:none;}
+.search-wrap input:focus{border-color:var(--blue-mid);}
+.search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text3);pointer-events:none;}
+.case-count{font-size:11px;color:var(--text2);font-weight:500;white-space:nowrap;}
+select.sort-sel{border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px 7px;font-size:11px;background:var(--surface2);color:var(--text);cursor:pointer;outline:none;}
+
+/* ── CASES LIST ── */
+.empty-state{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:52px 24px;text-align:center;}
+.empty-icon{font-size:44px;margin-bottom:14px;}
+.empty-state h3{font-size:15px;font-weight:600;color:var(--text2);margin-bottom:7px;}
+.empty-state p{font-size:12px;color:var(--text3);line-height:1.65;}
+.kbd{display:inline-block;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:monospace;font-size:11px;margin:0 2px;}
+
+/* ── CASE CARD ── */
+.case-card-wrap{margin-bottom:2px;}
+.case-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  display:grid;
+  grid-template-columns:170px 140px 1fr 155px 160px;
+  align-items:stretch;
+  cursor:pointer;
+  transition:border-color .12s, box-shadow .12s;
+  overflow:hidden;
+  min-height:58px;
+}
+.case-card:hover{border-color:#90caf9;box-shadow:0 1px 6px rgba(21,101,192,.1);}
+.case-card.expanded{border-color:var(--blue-mid);border-bottom-left-radius:0;border-bottom-right-radius:0;}
+@media(max-width:960px){
+  .case-card{grid-template-columns:150px 120px 1fr 130px 140px;}
+}
+@media(max-width:720px){
+  .case-card{grid-template-columns:1fr 1fr;}
+  .case-card .cc-col:nth-child(5){grid-column:1/-1;}
+}
+@media(max-width:440px){
+  .case-card{grid-template-columns:1fr;}
+}
+
+.cc-col{
+  padding:9px 12px;
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;justify-content:center;
+  align-items:flex-start;
+  gap:2px;
+  min-width:0;
+}
+.cc-col:last-child{border-right:none;}
+
+/* Col 1 */
+.cc-type{font-size:9.5px;color:var(--text3);font-weight:500;letter-spacing:.3px;text-transform:uppercase;}
+.cc-id{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;}
+.cc-date{font-size:11px;color:var(--text2);}
+.cc-period{display:inline-flex;align-items:center;gap:3px;background:var(--purple-bg);color:var(--purple-mid);border-radius:4px;padding:1px 6px;font-size:9px;font-weight:700;margin-top:1px;}
+
+/* Col 2 */
+.cc-route-main{font-size:11.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.cc-route-sub{display:flex;align-items:center;gap:5px;margin-top:2px;}
+.cc-dash{font-size:10px;color:var(--text3);}
+.cc-station{font-size:9.5px;font-weight:700;background:var(--blue-bg);color:var(--blue-mid);padding:2px 6px;border-radius:3px;}
+
+/* Col 3 */
+.cc-driver{font-size:12.5px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.cc-driver-id{font-size:10px;color:var(--text3);}
+
+/* Col 4 */
+.cc-pkg-label{font-size:9.5px;color:var(--text3);letter-spacing:.2px;}
+.cc-pkg-id{font-size:11px;color:var(--text2);font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.cc-pkg-val{font-size:14px;font-weight:700;color:var(--text);margin-top:1px;}
+
+/* Col 5 */
+.cc-status-wrap{display:flex;flex-direction:column;align-items:flex-start;gap:3px;}
+.status-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:5px;font-size:11px;font-weight:600;white-space:nowrap;}
+.sb-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.sb-aguardando{background:var(--amber-bg);color:var(--amber-mid);}
+.sb-comprovante{background:var(--blue-bg);color:var(--blue);}
+.sb-penalidade{background:var(--red-bg);color:var(--red);}
+.sb-anulado{background:var(--gray-bg);color:var(--gray-mid);}
+.sb-faturamento{background:var(--green-bg);color:var(--green-mid);}
+.sub-badge{font-size:9.5px;padding:2px 6px;border-radius:3px;border:1px solid var(--border);background:var(--surface2);color:var(--text3);}
+.sub-revisado{border-color:#a5d6a7;background:#e8f5e9;color:#2e7d32;}
+.sub-sem-revisao{border-color:#ffcc80;background:#fff3e0;color:#e65100;}
+.cc-hint{font-size:9px;color:var(--text3);margin-top:1px;}
+
+/* ── EXPAND ── */
+.case-expand{
+  background:var(--surface2);
+  border:1px solid var(--blue-mid);
+  border-top:none;
+  border-radius:0 0 var(--radius-sm) var(--radius-sm);
+  padding:12px 16px;
+  display:none;
+}
+.case-expand.open{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;}
+.ex-field label{font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:3px;}
+.ex-field p{font-size:12px;color:var(--text);line-height:1.45;}
+.ex-field.wide{grid-column:1/-1;}
+
+/* ── DARK ── */
+[data-theme="dark"] .case-card:hover{box-shadow:0 1px 6px rgba(66,165,245,.15);}
+[data-theme="dark"] .import-panel{border-color:#445;}
+[data-theme="dark"] select.sort-sel,[data-theme="dark"] textarea#pasteArea{color-scheme:dark;}
+[data-theme="dark"] thead th{background:var(--surface2);}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <div class="logo-box">
+      <span class="logo-icon">📦</span>
+      <div>
+        <div class="logo-title">Bandeja de Suporte</div>
+        <div class="logo-sub">Kangu Logistics · SSP36</div>
+      </div>
+    </div>
+    <div class="divider-v"></div>
+    <div class="tab-area">
+      <span class="tab">Last mile</span>
+      <span class="tab active">PNR</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="period-chip" id="headerPeriod">Período —</span>
+    <button class="btn-icon" onclick="toggleImport()">⬆ Importar dados</button>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- IMPORT PANEL -->
+  <div class="import-panel" id="importPanel">
+    <div class="import-head" onclick="toggleImport()">
+      <div class="import-head-left">
+        <span class="import-icon">📋</span>
+        <div>
+          <h2>Importar dados da Bandeja ML</h2>
+          <p>Cole o conteúdo copiado (Ctrl+A → Ctrl+C) da bandeja ML, ou carregue o CSV via "Baixar lista".</p>
+        </div>
+      </div>
+      <span class="import-toggle">▾</span>
+    </div>
+    <div class="import-body">
+      <div class="import-row">
+        <textarea id="pasteArea" placeholder="Cole aqui (Ctrl+V) o conteúdo da bandeja de suporte do Mercado Livre…"></textarea>
+        <div class="import-btns">
+          <button class="btn-import" onclick="doImportClipboard()">⬆ Importar colado</button>
+          <button class="btn-csv" onclick="document.getElementById('csvInput').click()">📄 Carregar CSV</button>
+          <input type="file" id="csvInput" accept=".csv,text/csv" onchange="doImportCSV(this)">
+          <button class="btn-clear" onclick="clearAllData()">🗑 Limpar tudo</button>
+        </div>
+      </div>
+      <div class="import-msg" id="importMsg"></div>
+    </div>
+  </div>
+
+  <!-- STATS ROW -->
+  <div class="stats-row">
+    <div class="stat-card stat-total">
+      <div class="stlabel">Casos</div>
+      <div class="stnum" id="statTotal">0</div>
+    </div>
+    <div class="stat-card">
+      <h3>Motivo dos casos</h3>
+      <div class="srow"><span class="slbl">Sem comprovante de entrega</span><span class="svals"><span class="snum">0</span><span class="spct">0%</span></span></div>
+      <div class="srow"><span class="slbl">Comprovante errado ou incompleto</span><span class="svals"><span class="snum">0</span><span class="spct">0%</span></span></div>
+      <div class="srow hi"><span class="slbl">Reclamação de PNR</span><span class="svals"><span class="snum" id="smPNR">0</span><span class="spct" id="smPNRpct">0%</span></span></div>
+      <div class="srow"><span class="slbl">Motivo não especificado</span><span class="svals"><span class="snum">0</span><span class="spct">0%</span></span></div>
+    </div>
+    <div class="stat-card">
+      <h3>Status dos casos</h3>
+      <div class="srow hi"><span class="slbl">Novo</span><span class="svals"><span class="snum" id="ssNovo">0</span><span class="spct" id="ssNovoPct">0%</span></span></div>
+      <div class="srow hi"><span class="slbl">Revisão em andamento</span><span class="svals"><span class="snum" id="ssRev">0</span><span class="spct" id="ssRevPct">0%</span></span></div>
+      <div class="srow hi"><span class="slbl">Encerrado</span><span class="svals"><span class="snum" id="ssEnc">0</span><span class="spct" id="ssEncPct">0%</span></span></div>
+      <div class="srow"><span class="slbl">Cancelado</span><span class="svals"><span class="snum">0</span><span class="spct">0%</span></span></div>
+    </div>
+    <div class="stat-card">
+      <h3>Detalhe do fechamento</h3>
+      <div class="srow hi"><span class="slbl">Cancelado</span><span class="svals"><span class="snum" id="sfCan">0</span><span class="spct" id="sfCanPct">0%</span></span></div>
+      <div class="srow hi"><span class="slbl">Enviado para faturamento</span><span class="svals"><span class="snum" id="sfFat">0</span><span class="spct" id="sfFatPct">0%</span></span></div>
+      <div class="srow" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">
+        <span class="slbl" style="color:var(--red-mid);font-size:11px;">⚠ Com penalidade</span>
+        <span class="svals"><span class="snum" id="sfPen" style="color:var(--red-mid);">0</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="filter-chips">
+      <span class="chip active" data-filter="all"      onclick="setFilter('all',this)">Todos</span>
+      <span class="chip c-aguardando" data-filter="aguardando" onclick="setFilter('aguardando',this)">⏳ Aguardando</span>
+      <span class="chip c-comprovante" data-filter="comprovante" onclick="setFilter('comprovante',this)">📎 Comprovante</span>
+      <span class="chip c-penalidade"  data-filter="penalidade"  onclick="setFilter('penalidade',this)">⚠ Penalidade</span>
+      <span class="chip c-anulado"     data-filter="anulado"     onclick="setFilter('anulado',this)">✖ Anulado</span>
+      <span class="chip c-faturamento" data-filter="faturamento" onclick="setFilter('faturamento',this)">✔ Faturamento</span>
+    </div>
+    <div class="filter-right">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Buscar caso…" oninput="doSearch(this.value)">
+      </div>
+      <select class="sort-sel" onchange="setSort(this.value)">
+        <option value="date-desc">Mais recentes</option>
+        <option value="date-asc">Mais antigos</option>
+        <option value="value-desc">Maior valor</option>
+        <option value="value-asc">Menor valor</option>
+      </select>
+      <span class="case-count" id="caseCount">0 casos</span>
+    </div>
+  </div>
+
+  <!-- CASES LIST -->
+  <div id="casesList"></div>
+
+</div>
+
+<script>
+/* ── STATE ── */
+const ST = { cases:[], filter:'all', search:'', sortBy:'date', sortDir:'desc' };
+
+const SM = {
+  'Aguardando comprovante': { cls:'sb-aguardando', label:'Aguardando comprovante' },
+  'Comprovante carregado':  { cls:'sb-comprovante', label:'Comprovante carregado'  },
+  'Com penalidade':         { cls:'sb-penalidade',  label:'Com penalidade'         },
+  'Anulado':                { cls:'sb-anulado',     label:'Anulado'                },
+  'Enviado para faturamento':{ cls:'sb-faturamento',label:'Enviado p/ faturamento' },
+};
+
+/* ── INIT ── */
+function init() {
+  const saved = localStorage.getItem('pnr_cases_v2');
+  if (saved) { try { ST.cases = JSON.parse(saved); } catch(e){} }
+  const theme = localStorage.getItem('pnr_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  render();
+}
+
+function saveState() { localStorage.setItem('pnr_cases_v2', JSON.stringify(ST.cases)); }
+
+/* ── CLIPBOARD PARSER ── */
+function parseClipboard(raw) {
+  const lines = raw.split('\n').map(l => l.trim());
+  const result = [];
+  let i = 0;
+  while (i < lines.length) {
+    if (lines[i] === 'Reclamação de PNR') {
+      const nextLine = lines[i+1] || '';
+      // Must be a case ID: 7+ digits optionally followed by |
+      if (/^\d{7,}\|?$/.test(nextLine)) {
+        const caseId    = nextLine.replace(/\|$/, '');
+        const dateBR    = lines[i+2] || '';
+        const routeCode = (lines[i+3] || '').replace(/\|$/, '').trim();
+        const routeId   = lines[i+4] || '';
+        // Skip the "-" separator and blank lines
+        let j = i + 5;
+        while (j < lines.length && (lines[j] === '-' || lines[j] === '')) j++;
+        const station    = lines[j]     || '';
+        const driverName = lines[j+1]   || '';
+        const pkgLine    = lines[j+2]   || '';
+        const packageId  = pkgLine.replace(/^ID\s+do\s+pacote\s*/i, '').trim();
+        const valueLine  = lines[j+3]   || '';
+        const value      = valueLine.replace(/^R\$/, '').replace(',', '.').trim();
+        const status     = normStatus(lines[j+4] || '');
+        let subStatus = '', advance = j + 5;
+        if (status === 'Enviado para faturamento') {
+          const peek = lines[j+5] || '';
+          if (peek === 'Revisado' || peek === 'Sem revisão') { subStatus = peek; advance = j+6; }
+        }
+        if (caseId && packageId) {
+          result.push({ caseId, dateBR, routeCode, routeId, station, driverName,
+            packageId, value, status, subStatus, source:'clipboard',
+            importedAt: new Date().toISOString() });
+        }
+        i = advance; continue;
+      }
+    }
+    i++;
+  }
+  return result;
+}
+
+/* ── CSV PARSER ── */
+function parseCSV(raw) {
+  const lines = raw.split('\n');
+  const result = [];
+  for (let i = 1; i < lines.length; i++) {
+    const c = csvRow(lines[i]);
+    if (c.length < 12) continue;
+    const caseId = (c[0]||'').trim();
+    if (!/^\d{5,}$/.test(caseId)) continue;
+    const status    = normStatus((c[3]||'').trim());
+    const pedidoRev = (c[6]||'').trim();
+    const subStatus = status === 'Enviado para faturamento'
+      ? (pedidoRev ? (pedidoRev.toLowerCase().includes('falta') ? 'Sem revisão' : 'Revisado') : '') : '';
+    const valorRaw  = (c[13]||'').trim();
+    result.push({
+      caseId,
+      dateBR:      isoToBR((c[1]||'').trim()),
+      dataCaso:    (c[1]||'').trim(),
+      status,      subStatus,
+      periodo:     (c[4]||'').trim(),
+      dataRev:     (c[5]||'').trim(),
+      pedidoRev,
+      dataEnc:     (c[7]||'').trim(),
+      repAss:      (c[8]||'').trim(),
+      comentEnc:   (c[9]||'').trim(),
+      numFatura:   (c[10]||'').trim(),
+      packageId:   (c[11]||'').trim(),
+      produtos:    (c[12]||'').trim(),
+      value:       valorRaw.replace('R$','').replace(',','.').trim(),
+      station:     (c[17]||'').trim(),
+      routeId:     (c[18]||'').trim(),
+      idMotorista: (c[19]||'').trim(),
+      dataEntrega: (c[20]||'').trim(),
+      routeCode:'', driverName:'',
+      source:'csv', importedAt: new Date().toISOString()
+    });
+  }
+  return result;
+}
+
+function csvRow(line) {
+  const r=[]; let cur='', q=false;
+  for (const ch of line) {
+    if (ch==='"') q=!q;
+    else if (ch===',' && !q) { r.push(cur); cur=''; }
+    else cur+=ch;
+  }
+  r.push(cur); return r;
+}
+
+function normStatus(s) {
+  const t=(s||'').trim().toLowerCase();
+  if (t==='aguardando comprovante')                       return 'Aguardando comprovante';
+  if (t==='anulado')                                      return 'Anulado';
+  if (t==='comprovante carregado')                        return 'Comprovante carregado';
+  if (t.startsWith('enviado') && t.includes('faturamento')) return 'Enviado para faturamento';
+  if (t.startsWith('enviados') && t.includes('faturamento')) return 'Enviado para faturamento';
+  if (t==='com penalidade')                               return 'Com penalidade';
+  return s.trim();
+}
+
+const MONTH_NAMES=['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+function isoToBR(iso) {
+  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return iso;
+  return `${parseInt(m[3])} de ${MONTH_NAMES[parseInt(m[2])]}`;
+}
+
+/* ── MERGE ── */
+function mergeCases(incoming) {
+  const map = new Map(ST.cases.map(c => [c.caseId, c]));
+  let added=0, updated=0;
+  for (const nc of incoming) {
+    if (map.has(nc.caseId)) {
+      const ex = map.get(nc.caseId);
+      map.set(nc.caseId, { ...ex, ...nc,
+        routeCode:   nc.routeCode   || ex.routeCode,
+        driverName:  nc.driverName  || ex.driverName,
+        produtos:    nc.produtos    || ex.produtos,
+        periodo:     nc.periodo     || ex.periodo,
+        dataEntrega: nc.dataEntrega || ex.dataEntrega,
+        idMotorista: nc.idMotorista || ex.idMotorista,
+      });
+      updated++;
+    } else {
+      map.set(nc.caseId, nc);
+      added++;
+    }
+  }
+  ST.cases = Array.from(map.values());
+  return { added, updated };
+}
+
+/* ── STATS ── */
+function calcStats(cases) {
+  const total=cases.length;
+  const cnt={};
+  for (const c of cases) cnt[c.status]=(cnt[c.status]||0)+1;
+  const aguardando = cnt['Aguardando comprovante']||0;
+  const comprovante= cnt['Comprovante carregado'] ||0;
+  const penalidade = cnt['Com penalidade']         ||0;
+  const anulado    = cnt['Anulado']                ||0;
+  const faturamento= cnt['Enviado para faturamento']||0;
+  const novo       = aguardando + penalidade;
+  const encerrado  = anulado + faturamento;
+  const pct = (n,d) => d ? +((n/d)*100).toFixed(2) : 0;
+  return { total, novo, revisao:comprovante, encerrado, anulado, faturamento, penalidade,
+    novoPct:pct(novo,total), revPct:pct(comprovante,total), encPct:pct(encerrado,total),
+    canPct:encerrado?pct(anulado,encerrado):0, fatPct:encerrado?pct(faturamento,encerrado):0 };
+}
+
+/* ── FILTER / SORT ── */
+function getVisible() {
+  let cases = ST.cases.slice();
+  if (ST.filter==='aguardando')  cases=cases.filter(c=>c.status==='Aguardando comprovante');
+  else if (ST.filter==='comprovante') cases=cases.filter(c=>c.status==='Comprovante carregado');
+  else if (ST.filter==='penalidade')  cases=cases.filter(c=>c.status==='Com penalidade');
+  else if (ST.filter==='anulado')     cases=cases.filter(c=>c.status==='Anulado');
+  else if (ST.filter==='faturamento') cases=cases.filter(c=>c.status==='Enviado para faturamento');
+  if (ST.search) {
+    const q=ST.search.toLowerCase();
+    cases=cases.filter(c=>
+      c.caseId.includes(q)||
+      (c.driverName||'').toLowerCase().includes(q)||
+      (c.packageId||'').includes(q)||
+      (c.routeCode||'').toLowerCase().includes(q)||
+      (c.routeId||'').includes(q)||
+      (c.produtos||'').toLowerCase().includes(q)
+    );
+  }
+  return cases.sort((a,b)=>{
+    let va, vb;
+    if (ST.sortBy==='value') { va=parseFloat(a.value)||0; vb=parseFloat(b.value)||0; }
+    else { va=parseInt(a.caseId)||0; vb=parseInt(b.caseId)||0; }
+    return ST.sortDir==='desc' ? vb-va : va-vb;
+  });
+}
+
+/* ── RENDER ── */
+function render() {
+  const all=ST.cases, vis=getVisible(), stats=calcStats(all);
+  // Header period
+  const periods=[...new Set(all.map(c=>c.periodo).filter(Boolean))];
+  document.getElementById('headerPeriod').textContent = periods.length ? periods.join(' · ') : 'Período —';
+  // Stats
+  document.getElementById('statTotal').textContent  = stats.total;
+  document.getElementById('smPNR').textContent      = stats.total;
+  document.getElementById('smPNRpct').textContent   = stats.total ? '100%' : '0%';
+  document.getElementById('ssNovo').textContent     = stats.novo;
+  document.getElementById('ssNovoPct').textContent  = stats.novoPct+'%';
+  document.getElementById('ssRev').textContent      = stats.revisao;
+  document.getElementById('ssRevPct').textContent   = stats.revPct+'%';
+  document.getElementById('ssEnc').textContent      = stats.encerrado;
+  document.getElementById('ssEncPct').textContent   = stats.encPct+'%';
+  document.getElementById('sfCan').textContent      = stats.anulado;
+  document.getElementById('sfCanPct').textContent   = stats.canPct+'%';
+  document.getElementById('sfFat').textContent      = stats.faturamento;
+  document.getElementById('sfFatPct').textContent   = stats.fatPct+'%';
+  document.getElementById('sfPen').textContent      = stats.penalidade;
+  // Chip counts
+  const chipCounts = {
+    all: all.length,
+    aguardando: all.filter(c=>c.status==='Aguardando comprovante').length,
+    comprovante: all.filter(c=>c.status==='Comprovante carregado').length,
+    penalidade: all.filter(c=>c.status==='Com penalidade').length,
+    anulado: all.filter(c=>c.status==='Anulado').length,
+    faturamento: all.filter(c=>c.status==='Enviado para faturamento').length,
+  };
+  document.querySelectorAll('.chip[data-filter]').forEach(el => {
+    const f = el.dataset.filter;
+    const n = chipCounts[f] || 0;
+    const base = el.dataset.base || (el.dataset.base = el.textContent.trim());
+    el.textContent = n > 0 ? `${base} (${n})` : base;
+  });
+  document.getElementById('caseCount').textContent = `${vis.length} caso${vis.length!==1?'s':''}`;
+  // List
+  const list = document.getElementById('casesList');
+  if (!vis.length) {
+    list.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <h3>${all.length===0 ? 'Nenhum dado importado ainda' : 'Nenhum caso encontrado'}</h3>
+      <p>${all.length===0
+        ? 'Na bandeja do ML, pressione <kbd class="kbd">Ctrl+A</kbd> → <kbd class="kbd">Ctrl+C</kbd>,<br>depois cole aqui com <kbd class="kbd">Ctrl+V</kbd> e clique em <strong>Importar colado</strong>.<br>Ou carregue o CSV via <strong>Baixar lista</strong>.'
+        : 'Ajuste os filtros ou o termo de busca.'}</p>
+    </div>`;
+    return;
+  }
+  list.innerHTML = vis.map(renderCard).join('');
+}
+
+function renderCard(c) {
+  const sm = SM[c.status] || { cls:'sb-anulado', label:c.status };
+  const route = c.routeCode ? `${c.routeCode} | ${c.routeId}` : (c.routeId || '—');
+  const driver = c.driverName || (c.idMotorista ? `ID: ${c.idMotorista}` : '—');
+  const valFmt = c.value ? `R$${parseFloat(c.value).toLocaleString('pt-BR',{minimumFractionDigits:2})}` : '—';
+  const pkgShort = c.packageId ? c.packageId.slice(-10) : '—';
+  const periodHtml = c.periodo ? `<span class="cc-period">📅 ${c.periodo}</span>` : '';
+  const subHtml = c.subStatus
+    ? `<span class="sub-badge ${c.subStatus==='Revisado'?'sub-revisado':'sub-sem-revisao'}">${c.subStatus}</span>` : '';
+  const hasDetail = c.produtos || c.dataEntrega || c.comentEnc || c.pedidoRev || c.dataEnc || c.numFatura;
+  const hintHtml = hasDetail ? `<span class="cc-hint">▾ ver detalhes</span>` : '';
+
+  return `<div class="case-card-wrap" id="cw_${c.caseId}">
+<div class="case-card" onclick="toggleExpand('${c.caseId}')">
+  <div class="cc-col">
+    <span class="cc-type">Reclamação de PNR</span>
+    <span class="cc-id">${c.caseId}</span>
+    <span class="cc-date">${c.dateBR||c.dataCaso||'—'}</span>
+    ${periodHtml}
+  </div>
+  <div class="cc-col">
+    <span class="cc-route-main" title="${route}">${route}</span>
+    <div class="cc-route-sub">
+      <span class="cc-dash">–</span>
+      <span class="cc-station">${c.station||'SSP36'}</span>
+    </div>
+  </div>
+  <div class="cc-col">
+    <span class="cc-driver" title="${esc(driver)}">${esc(driver)}</span>
+    ${c.idMotorista && c.driverName ? `<span class="cc-driver-id">Motorista ${c.idMotorista}</span>` : ''}
+  </div>
+  <div class="cc-col">
+    <span class="cc-pkg-label">ID do pacote</span>
+    <span class="cc-pkg-id" title="${c.packageId||''}">${pkgShort}</span>
+    <span class="cc-pkg-val">${valFmt}</span>
+  </div>
+  <div class="cc-col">
+    <div class="cc-status-wrap">
+      <span class="status-badge ${sm.cls}"><span class="sb-dot"></span>${sm.label}</span>
+      ${subHtml}${hintHtml}
+    </div>
+  </div>
+</div>
+${hasDetail ? `<div class="case-expand" id="exp_${c.caseId}">${buildExpand(c)}</div>` : ''}
+</div>`;
+}
+
+function buildExpand(c) {
+  const f = [];
+  if (c.produtos)    f.push(`<div class="ex-field wide"><label>Produtos</label><p>${esc(c.produtos)}</p></div>`);
+  if (c.packageId)   f.push(`<div class="ex-field"><label>ID de envio completo</label><p>${c.packageId}</p></div>`);
+  if (c.dataEntrega) f.push(`<div class="ex-field"><label>Data de entrega</label><p>${isoToBR(c.dataEntrega)||c.dataEntrega}</p></div>`);
+  if (c.dataEnc)     f.push(`<div class="ex-field"><label>Data de encerramento</label><p>${(c.dataEnc||'').substring(0,10)}</p></div>`);
+  if (c.pedidoRev)   f.push(`<div class="ex-field wide"><label>Pedido de revisão</label><p>${esc(c.pedidoRev)}</p></div>`);
+  if (c.comentEnc)   f.push(`<div class="ex-field wide"><label>Comentário de encerramento</label><p>${esc(c.comentEnc)}</p></div>`);
+  if (c.numFatura)   f.push(`<div class="ex-field"><label>Nº Pré-fatura</label><p>${c.numFatura}</p></div>`);
+  if (c.repAss)      f.push(`<div class="ex-field"><label>Rep. Assistente</label><p>${c.repAss}</p></div>`);
+  return f.join('');
+}
+
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ── ACTIONS ── */
+function toggleExpand(id) {
+  const exp = document.getElementById(`exp_${id}`);
+  if (!exp) return;
+  exp.classList.toggle('open');
+  const card = document.querySelector(`#cw_${id} .case-card`);
+  if (card) card.classList.toggle('expanded');
+}
+
+function toggleImport() {
+  document.getElementById('importPanel').classList.toggle('collapsed');
+}
+
+function setFilter(f, el) {
+  ST.filter = f;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function doSearch(v) { ST.search=v.trim(); render(); }
+
+function setSort(v) {
+  const [by,dir]=v.split('-');
+  ST.sortBy=by; ST.sortDir=dir; render();
+}
+
+function showMsg(txt, type) {
+  const el = document.getElementById('importMsg');
+  el.textContent = txt;
+  el.className = `import-msg ${type}`;
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>{ el.className='import-msg'; }, 7000);
+}
+
+function doImportClipboard() {
+  const raw = document.getElementById('pasteArea').value.trim();
+  if (!raw) { showMsg('⚠ Cole o conteúdo da bandeja primeiro.', 'err'); return; }
+  const parsed = parseClipboard(raw);
+  if (!parsed.length) {
+    showMsg('⚠ Nenhum caso identificado. Verifique se o conteúdo foi copiado corretamente (Ctrl+A → Ctrl+C na página da bandeja ML).', 'err');
+    return;
+  }
+  const { added, updated } = mergeCases(parsed);
+  saveState();
+  document.getElementById('pasteArea').value = '';
+  showMsg(`✔ ${added} caso${added!==1?'s':''} adicionado${added!==1?'s':''}, ${updated} atualizado${updated!==1?'s':''}.`, 'ok');
+  render();
+}
+
+function doImportCSV(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const parsed = parseCSV(e.target.result);
+    if (!parsed.length) { showMsg('⚠ Nenhum caso encontrado no CSV.', 'err'); return; }
+    const { added, updated } = mergeCases(parsed);
+    saveState();
+    showMsg(`✔ CSV: ${added} caso${added!==1?'s':''} adicionado${added!==1?'s':''}, ${updated} atualizado${updated!==1?'s':''}.`, 'ok');
+    render();
+  };
+  reader.readAsText(file, 'UTF-8');
+  input.value = '';
+}
+
+function clearAllData() {
+  if (!confirm('Limpar todos os casos? Esta ação não pode ser desfeita.')) return;
+  ST.cases = [];
+  saveState();
+  showMsg('Dados limpos com sucesso.', 'info');
+  render();
+}
+
+function toggleTheme() {
+  const next = document.documentElement.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('pnr_theme', next);
+}
+
+// Ctrl+V anywhere → focus paste area
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey||e.metaKey) && e.key==='v' && document.activeElement !== document.getElementById('pasteArea')) {
+    const panel = document.getElementById('importPanel');
+    panel.classList.remove('collapsed');
+    document.getElementById('pasteArea').focus();
+  }
+});
+
+init();
+</script>
+</body>
+</html>
